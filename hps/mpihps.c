@@ -14,7 +14,7 @@ For example S(7) = 2.592857142857 to 12 digits of precison.
 #include <stdlib.h>
 #include <time.h>
 #include <mpi.h>
-
+#define MAX_PROC_NAME 15
 int main(int argc, char ***argv)
 {
 	long unsigned int *digits;
@@ -23,13 +23,17 @@ int main(int argc, char ***argv)
 	int i, digit;
 	double elapsed_time; 			/* execution time */
 	int id; 				/* this process id */
-	int num_procs; 					/* number of processes */
+	int num_procs; 				/* number of processes */
+	int namelen;
+	char cpu_name [MAX_PROC_NAME];
 
 	MPI_Init (&argc, argv);
 	MPI_Barrier(MPI_COMM_WORLD); 
-	elapsed_time = -MPI_Wtime();
 	MPI_Comm_rank (MPI_COMM_WORLD, &id);
 	MPI_Comm_size (MPI_COMM_WORLD, &num_procs);
+	MPI_Get_processor_name(cpu_name, &namelen);
+	printf("[%d] starting on %s\n", id, cpu_name);
+	elapsed_time = -MPI_Wtime();
 	//printf("[%d] start...\n", id);
 	
 	//Sequential Method
